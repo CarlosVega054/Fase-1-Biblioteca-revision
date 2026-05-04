@@ -1,0 +1,6 @@
+[2026-05-04 10:47:29] Falta el driver de MySQL (el archivo .jar)
+[2026-05-04 10:47:32] Falta el driver de MySQL (el archivo .jar)
+[2026-05-04 10:47:39] Falta el driver de MySQL (el archivo .jar)
+[2026-05-04 10:47:58] Falta el driver de MySQL (el archivo .jar)
+[2026-05-04 10:53:03] Error conectando a la BD: Access denied for user 'root'@'localhost' (using password: YES)
+[2026-05-04 10:53:08] Error conectando a la BD: Access denied for user 'root'@'localhost' (using password: YES)
