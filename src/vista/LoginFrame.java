@@ -18,7 +18,7 @@ public class LoginFrame extends JFrame {
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null); // Layout absoluto simple (típico de estudiante)
+        setLayout(null);
 
         JLabel lblCorreo = new JLabel("Correo:");
         lblCorreo.setBounds(30, 30, 80, 25);
