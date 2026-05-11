@@ -7,9 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ManejoErrores {
-    // Método sencillo para guardar errores en un archivo txt como lo haría un estudiante
+    // Guardar errores 
     public static void guardarError(String mensaje) {
-        System.err.println("ERROR: " + mensaje); // También lo imprime en rojo en consola
+        System.err.println("ERROR: " + mensaje);
         
         try (FileWriter fw = new FileWriter("errores.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {
