@@ -63,7 +63,7 @@ public class DocumentoDAO {
             psDoc.setInt(4, libro.getAnioPublicacion());
             psDoc.setString(5, libro.getClasificacion());
             psDoc.setString(6, libro.getUbicacion());
-            psDoc.setString(7, "LIBRO");
+            psDoc.setString(7, "LIBRO"); // O podría venir de un dropdown
             psDoc.setInt(8, libro.getDisponibles());
             psDoc.setInt(9, libro.getTotal());
             psDoc.setString(10, libro.getEstadoFisico());

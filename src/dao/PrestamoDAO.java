@@ -7,6 +7,8 @@ import excepciones.ErrorValidacion;
 import modelo.Prestamo;
 import utilidades.ManejoErrores;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrestamoDAO {
     
@@ -19,6 +21,29 @@ public class PrestamoDAO {
         try {
             Connection con = Conexion.obtenerConexion();
             if (con != null) {
+                // Obtener rol del usuario que recibe el préstamo
+                String sqlRol = "SELECT id_rol FROM usuarios WHERE id_usuario = ?";
+                PreparedStatement psRol = con.prepareStatement(sqlRol);
+                psRol.setInt(1, p.getIdUsuario());
+                ResultSet rsRol = psRol.executeQuery();
+                int rolDestinatario = 0;
+                if (rsRol.next()) {
+                    rolDestinatario = rsRol.getInt("id_rol");
+                } else {
+                    throw new ErrorValidacion("El usuario ingresado no existe.");
+                }
+
+                // Validar límite de días de préstamo
+                long diffMillis = p.getFechaDevolucion().getTime() - p.getFechaPrestamo().getTime();
+                long diffDays = diffMillis / (24L * 60L * 60L * 1000L);
+                
+                if (rolDestinatario == 3 && diffDays > 7) {
+                    throw new ErrorValidacion("Un estudiante solo puede prestar un máximo de 7 días.");
+                }
+                if (rolDestinatario == 2 && diffDays > 15) {
+                    throw new ErrorValidacion("Un profesor solo puede prestar un máximo de 15 días.");
+                }
+
                 // 1. Validar si el usuario tiene mora (préstamos vencidos sin devolver)
                 String sqlMora = "SELECT COUNT(*) AS vencidos FROM prestamos WHERE id_usuario = ? AND estado = 'PRESTADO' AND fecha_devolucion < CURDATE()";
                 PreparedStatement psMora = con.prepareStatement(sqlMora);
@@ -35,8 +60,8 @@ public class PrestamoDAO {
                 ResultSet rsLimite = psLimite.executeQuery();
                 if (rsLimite.next()) {
                     int activos = rsLimite.getInt("activos");
-                    int maxPermitido = (idRolUsuario == 3) ? MAX_PRESTAMOS_ALUMNO : MAX_PRESTAMOS_PROFESOR;
-                    if (activos >= maxPermitido) {
+                    int maxPermitido = (rolDestinatario == 3) ? MAX_PRESTAMOS_ALUMNO : MAX_PRESTAMOS_PROFESOR;
+                    if (rolDestinatario != 1 && activos >= maxPermitido) { // Admin no tiene limite estricto
                         throw new ErrorValidacion("El usuario ha alcanzado el límite máximo de préstamos (" + maxPermitido + ").");
                     }
                 }
@@ -116,5 +141,35 @@ public class PrestamoDAO {
         } catch (Exception e) {
             ManejoErrores.guardarError("Error en devolución: " + e.getMessage());
         }
+    }
+
+    public List<String> listarPrestamos() {
+        List<String> lista = new ArrayList<>();
+        String sql = "SELECT p.id_prestamo, u.nombre, u.apellidos, d.titulo, p.fecha_prestamo, p.fecha_devolucion, p.estado, " +
+                     "DATEDIFF(CURDATE(), p.fecha_devolucion) as dias_retraso " +
+                     "FROM prestamos p " +
+                     "JOIN usuarios u ON p.id_usuario = u.id_usuario " +
+                     "JOIN documentos d ON p.id_documento = d.id_documento " +
+                     "ORDER BY p.id_prestamo DESC";
+        try {
+            Connection con = Conexion.obtenerConexion();
+            if (con != null) {
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()) {
+                    int dias = rs.getInt("dias_retraso");
+                    String estado = rs.getString("estado");
+                    String moraInfo = (estado.equals("PRESTADO") && dias > 0) ? " | Mora: " + dias + " días de retraso" : "";
+                    String info = "ID: " + rs.getInt("id_prestamo") + " | " + rs.getString("nombre") + " " + rs.getString("apellidos") + 
+                                  " | Doc: " + rs.getString("titulo") + " | Vence: " + rs.getDate("fecha_devolucion") +
+                                  " | " + estado + moraInfo;
+                    lista.add(info);
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            ManejoErrores.guardarError("Error al listar prestamos: " + e.getMessage());
+        }
+        return lista;
     }
 }

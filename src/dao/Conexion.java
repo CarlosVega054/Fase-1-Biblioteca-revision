@@ -13,6 +13,7 @@ public class Conexion {
     public static Connection obtenerConexion() {
         Connection con = null;
         try {
+            // Cargar el driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(URL, USUARIO, CLAVE);
         } catch (ClassNotFoundException e) {
