@@ -10,6 +10,11 @@
             <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/vista/PrestamosFrame.java</file>
             <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/Principal.java</file>
             <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/dao/DocumentoDAO.java</file>
+            <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/vista/LoginFrame.java</file>
+            <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/excepciones/ErrorValidacion.java</file>
+            <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/utilidades/ManejoErrores.java</file>
+            <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/modelo/Documento.java</file>
+            <file>file:/Users/carlosvega05/Desktop/BibliotecaColegio/src/vista/ConfiguracionFrame.java</file>
         </group>
     </open-files>
 </project-private>

@@ -37,17 +37,24 @@ public class MainFrame extends JFrame {
         itemPrestar.addActionListener(e -> new PrestamosFrame().setVisible(true));
         menuPrestamos.add(itemPrestar);
         
+        // Menú de Configuración (solo admin)
+        JMenu menuConfiguracion = new JMenu("Configuración");
+        JMenuItem itemConfigMora = new JMenuItem("Calcular Mora (por año)");
+        itemConfigMora.addActionListener(e -> new ConfiguracionFrame().setVisible(true));
+        menuConfiguracion.add(itemConfigMora);
+        
+        JMenuItem itemConfigPrestamos = new JMenuItem("Límite de Préstamos (por rol)");
+        itemConfigPrestamos.addActionListener(e -> new ConfiguracionFrame().setVisible(true));
+        menuConfiguracion.add(itemConfigPrestamos);
+
         barra.add(menuArchivo);
         if (Sesion.usuarioLogueado.getIdRol() == 1) { // Solo el admin ve Gestion Usuarios
             barra.add(menuUsuarios);
         }
         barra.add(menuLibros);
         barra.add(menuPrestamos);
-        
-        // Si no es admin (rol 1), ocultar algunos menus de ejemplo
-        if (Sesion.usuarioLogueado.getIdRol() != 1) {
-            // Ejemplo: solo admin puede hacer prestamos o algo similar
-            // Por simplicidad, todos ven el catalogo
+        if (Sesion.usuarioLogueado.getIdRol() == 1) { // Solo el admin ve Configuración
+            barra.add(menuConfiguracion);
         }
         
         setJMenuBar(barra);

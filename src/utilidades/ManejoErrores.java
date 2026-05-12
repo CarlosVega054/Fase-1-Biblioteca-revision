@@ -9,7 +9,10 @@ import java.util.Date;
 public class ManejoErrores {
     // Guardar errores 
     public static void guardarError(String mensaje) {
+        
         System.err.println("ERROR: " + mensaje);
+
+        System.err.println("ERROR: " + mensaje); 
         
         try (FileWriter fw = new FileWriter("errores.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {

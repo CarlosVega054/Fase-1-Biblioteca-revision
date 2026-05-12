@@ -40,11 +40,15 @@ CREATE TABLE documentos (
     estado_fisico VARCHAR(50) DEFAULT 'DISPONIBLE' -- DISPONIBLE, PRESTADO, EN REPARACION, RESERVADO
 );
 
--- Tablas especificas
+-- Tablas especificas para cada tipo de documento
 CREATE TABLE libros (
     id_documento INT PRIMARY KEY,
     isbn VARCHAR(50),
     editorial VARCHAR(100),
+    edicion VARCHAR(50) DEFAULT '1a edición',
+    num_paginas INT DEFAULT 0,
+    idioma VARCHAR(50) DEFAULT 'Español',
+    materia VARCHAR(100),
     FOREIGN KEY (id_documento) REFERENCES documentos(id_documento) ON DELETE CASCADE
 );
 
@@ -52,6 +56,10 @@ CREATE TABLE revistas (
     id_documento INT PRIMARY KEY,
     issn VARCHAR(50),
     edicion INT,
+    volumen INT DEFAULT 1,
+    numero INT DEFAULT 1,
+    periodicidad VARCHAR(50) DEFAULT 'Mensual',
+    editorial VARCHAR(100),
     FOREIGN KEY (id_documento) REFERENCES documentos(id_documento) ON DELETE CASCADE
 );
 
@@ -59,6 +67,9 @@ CREATE TABLE cds (
     id_documento INT PRIMARY KEY,
     genero VARCHAR(50),
     duracion INT,
+    formato VARCHAR(50) DEFAULT 'CD-ROM',
+    contenido VARCHAR(100) DEFAULT 'Educativo',
+    sistema_requerido VARCHAR(100),
     FOREIGN KEY (id_documento) REFERENCES documentos(id_documento) ON DELETE CASCADE
 );
 
@@ -66,6 +77,10 @@ CREATE TABLE tesis (
     id_documento INT PRIMARY KEY,
     carrera VARCHAR(100),
     universidad VARCHAR(100),
+    grado_academico VARCHAR(50) DEFAULT 'Licenciatura',
+    asesor VARCHAR(100),
+    fecha_defensa DATE,
+    num_paginas INT DEFAULT 0,
     FOREIGN KEY (id_documento) REFERENCES documentos(id_documento) ON DELETE CASCADE
 );
 
@@ -202,6 +217,39 @@ INSERT INTO documentos (id_documento, codigo, titulo, autor, anio_publicacion, c
 (146, 'LIB-146', 'What Is Life?', 'Erwin Schrödinger', 2024, 'Biología', 'B4C', 'LIBRO', 5, 5, 'DISPONIBLE'),
 (147, 'LIB-147', 'Zen and the Art of Motorcycle Maintenance', 'Robert M. Pirsig', 2024, 'Filosofía', 'D1A', 'LIBRO', 3, 3, 'DISPONIBLE'),
 (148, 'LIB-148', 'Zero to One', 'Peter Thiel', 2024, 'Negocios', 'C4A', 'LIBRO', 8, 8, 'DISPONIBLE');
+
+-- ==========================================
+-- CONFIGURACIÓN DEL SISTEMA
+-- ==========================================
+
+-- Tabla de configuración de mora por año
+CREATE TABLE configuracion_mora (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    anio INT NOT NULL UNIQUE,
+    mora_diaria DECIMAL(10,2) NOT NULL DEFAULT 0.50
+);
+
+-- Insertar configuración de mora por defecto para algunos años
+INSERT INTO configuracion_mora (anio, mora_diaria) VALUES 
+(2023, 0.25),
+(2024, 0.50),
+(2025, 0.75),
+(2026, 1.00);
+
+-- Tabla de configuración de límites de préstamos por rol
+CREATE TABLE configuracion_prestamos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_rol INT NOT NULL UNIQUE,
+    max_ejemplares INT NOT NULL DEFAULT 3,
+    max_dias INT NOT NULL DEFAULT 7,
+    FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+);
+
+-- Insertar configuración por defecto: Admin=sin limite práctico, Profesor=5/15días, Alumno=3/7días
+INSERT INTO configuracion_prestamos (id_rol, max_ejemplares, max_dias) VALUES 
+(1, 99, 365),
+(2, 5, 15),
+(3, 3, 7);
 
 INSERT INTO libros (id_documento, isbn, editorial) VALUES 
 (149, 'S/I', 'S/I'),

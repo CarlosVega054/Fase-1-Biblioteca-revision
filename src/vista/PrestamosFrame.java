@@ -44,7 +44,7 @@ public class PrestamosFrame extends JFrame {
         add(new JLabel("Documento:")).setBounds(30, 90, 100, 25);
         cbDocumentos = new JComboBox<>();
         DocumentoDAO docDao = new DocumentoDAO();
-        for (Documento d : docDao.listarLibros()) {
+        for (Documento d : docDao.listarTodos()) {
             cbDocumentos.addItem(d.getId() + " - " + d.getTitulo());
         }
         cbDocumentos.setBounds(140, 90, 200, 25);
