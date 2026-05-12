@@ -1,4 +1,1 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> c812b55 (Nueva Integracion.)
