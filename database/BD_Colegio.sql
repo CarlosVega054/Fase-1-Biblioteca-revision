@@ -1,4 +1,4 @@
--- Base de datos simple para proyecto estudiantil
+-- Base de datos --
 DROP DATABASE IF EXISTS bd_biblioteca;
 CREATE DATABASE bd_biblioteca;
 USE bd_biblioteca;
@@ -140,7 +140,7 @@ INSERT INTO cds (id_documento, genero, duracion) VALUES
 (16, 'Educativo', 60),
 (17, 'Educativo', 120);
 
--- 5. Nuevos Libros Agregados (Desde Imagen)
+-- 5. Libros Agregados
 INSERT INTO documentos (id_documento, codigo, titulo, autor, anio_publicacion, clasificacion, ubicacion, tipo, disponibles, total, estado_fisico) VALUES 
 (149, 'LIB-149', 'Así habló Zaratustra', 'Nietzsche', 2024, 'Filosofía', 'D6A', 'LIBRO', 1, 1, 'DISPONIBLE'),
 (157, 'LIB-157', 'Becker - Economía del crimen', 'Becker', 2024, 'Economía', 'D4F', 'LIBRO', 4, 4, 'DISPONIBLE'),
